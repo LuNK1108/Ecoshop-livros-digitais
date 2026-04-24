@@ -8,8 +8,34 @@
 <body>
     <h1>Lista de Livros</h1>
     <div id="lista-livros">
-
+ 
     </div>
+    <form action="/cadastrar_livro" method="POST">
+
+    <input name="id_autor" placeholder="ID Autor">
+    <input name="id_categoria" placeholder="ID Categoria">
+
+    <input name="titulo" placeholder="Título">
+    <input name="descricao" placeholder="Descrição">
+
+    <input name="preco" type="number" step="0.01" placeholder="Preço">
+
+    <input name="arquivo" placeholder="Arquivo PDF">
+    <input name="capa" placeholder="URL da capa">
+
+    <input name="paginas" type="number" placeholder="Páginas">
+
+    <select name="ativo">
+        <option value="true">Ativo</option>
+        <option value="false">Inativo</option>
+    </select>
+
+    <input name="data" type="date">
+
+    <button type="submit">Cadastrar</button>
+
+</form>
 </body>
 <script src="{{ url_for('static', filename='js/mostrar_livros.js') }}"></script>
+<script src="{{ url_for('static', filename='js/excluir_livro.js') }}"></script>
 </html>

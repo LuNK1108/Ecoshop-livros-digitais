@@ -10,6 +10,9 @@ fetch("/mostra/livro")
                     <p>${livro.descricao}</p>
                     <p>R$ ${livro.preco}</p>
                     <button>Comprar</button>
+                    <button onclick="excluir(${livro.id_livro})">
+                    Excluir
+                    </button>
                 </div>
             `;
         });
