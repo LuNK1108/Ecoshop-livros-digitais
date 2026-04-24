@@ -1,6 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect
-from backend.database import mostrar_livros, inserir_livro, excluir_livro
-
+from backend.database import mostrar_livros, inserir_livro, excluir_livro, validar_login, cadastro_usuario
 app = Flask(
     __name__,
     template_folder="frontend/templates",
@@ -10,6 +9,10 @@ app = Flask(
 @app.route("/")
 def home():
     return render_template("index.html")
+
+@app.route("/pagina_login")
+def pagina_login():
+    return render_template("login.html")
 
 @app.route("/mostra/livro")
 def mostra_livro():
@@ -31,7 +34,6 @@ def cadastrar_livro():
 
     inserir_livro(id_autor,id_categoria,titulo,descricao,preco,arquivo,capa,paginas,ativo,data
     )
-
     return redirect("/")
 
 @app.route("/excluir_livro", methods=["POST"])
@@ -40,5 +42,29 @@ def excluir_livros():
     id_livro = data["id"]
     excluir_livro(id_livro)
     return redirect("/")
+
+@app.route("/realizar_login", methods=["POST"])
+def realizar_login():
+    email = request.form["email"]
+    senha = request.form["senha"]
+    if validar_login(email, senha):
+        return redirect("/")
+    else:
+        return "email ou senha incorretos"
+
+@app.route("/cadastro_usuario", methods=["POST"])
+def cadastrar_usuario():
+    nome = request.form["nome"]
+    email = request.form["email"]
+    senha = request.form["senha"]
+    telefone = request.form["telefone"]
+    tipo = request.form["tipo"]
+    data = request.form["data"]
+    if cadastro_usuario(nome, email, senha, telefone, tipo, data):
+        print("usuario cadastrado")
+        return redirect("/")
+    else:
+        print("usuario nao cadastrado")
+        return redirect("/pagina_login")
 
 app.run(debug=True)
