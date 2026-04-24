@@ -13,12 +13,15 @@ if conexao.cursor:
 
 #retorna todos os livros no banco
 def mostrar_livros():
+    cursor = conexao.cursor(dictionary=True)
     cursor.execute("SELECT * FROM livro")
     livros = cursor.fetchall()
+    cursor.close()
     return livros
 
 #insere um livro no banco
 def inserir_livro(id_autor, id_categoria, titulo, descricao, preco, arquivo, capa, paginas, ativo, data):
+    cursor = conexao.cursor(dictionary=True)
     sql = """
     INSERT INTO livro 
     (id_autor, id_categoria, titulo, descricao, preco, arquivo_pdf, capa_url, paginas, ativo, data_publicacao)
@@ -29,3 +32,11 @@ def inserir_livro(id_autor, id_categoria, titulo, descricao, preco, arquivo, cap
 
     cursor.execute(sql, valores)
     conexao.commit()
+    cursor.close()
+
+def excluir_livro(id_livro):
+    cursor = conexao.cursor(dictionary=True)
+    sql = "DELETE FROM livro WHERE id_livro = %s"
+    cursor.execute(sql, (id_livro,))
+    conexao.commit()
+    cursor.close()
