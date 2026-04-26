@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <h2>Realizar login</h2>
+    <a href="/"><button>voltar</button></a>
+    
     <form action="/realizar_login" method="post">
+        <br>
         <input type="email" name="email">
         <input type="password" name="senha">
         <button type="submit">Logar</button>

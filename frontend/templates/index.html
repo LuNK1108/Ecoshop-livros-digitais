@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pagina home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <h1>Lista de Livros</h1>
     <a href="/pagina_login"><button>logar</button></a>
+    <a href="/pagina_carrinho"><button>Carrinho</button></a>
     <div id="lista-livros">
  
     </div>
@@ -39,4 +41,5 @@
 </body>
 <script src="{{ url_for('static', filename='js/mostrar_livros.js') }}"></script>
 <script src="{{ url_for('static', filename='js/excluir_livro.js') }}"></script>
+<script src="{{ url_for('static', filename='js/inserir_carrinho.js') }}"></script>
 </html>
