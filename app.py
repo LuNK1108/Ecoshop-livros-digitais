@@ -1,10 +1,13 @@
-from flask import Flask, render_template, jsonify, request, redirect
-from backend.database import mostrar_livros, inserir_livro, excluir_livro, validar_login, cadastro_usuario
+from flask import Flask, render_template, jsonify, request, redirect, session
+from backend.database import mostrar_livros, inserir_livro, excluir_livro, validar_login, cadastro_usuario, adicionar_item_carrinho, buscar_carrinho, buscar_itens_carrinho
 app = Flask(
     __name__,
     template_folder="frontend/templates",
     static_folder="frontend/static"
 )
+
+#chave
+app.secret_key = "chave_usuario"
 
 @app.route("/")
 def home():
@@ -13,6 +16,10 @@ def home():
 @app.route("/pagina_login")
 def pagina_login():
     return render_template("login.html")
+
+@app.route("/pagina_carrinho")
+def pagina_carrinho():
+    return render_template("carrinho.html")
 
 @app.route("/mostra/livro")
 def mostra_livro():
@@ -43,14 +50,31 @@ def excluir_livros():
     excluir_livro(id_livro)
     return redirect("/")
 
+@app.route("/item_carrinho", methods=["GET", "POST"])
+def add_item_carrinho():
+
+    data = request.get_json(silent=True)
+    if not data:
+        print("Erro: JSON não enviado", 400)
+    id_livro = int(data["id"])
+    carrinho = buscar_carrinho(session["usuario_id"])
+    id_carrinho = carrinho["id_carrinho"]
+    adicionar_item_carrinho(id_carrinho, id_livro, 1)
+    return redirect("/pagina_carrinho")
+
+    
 @app.route("/realizar_login", methods=["POST"])
 def realizar_login():
     email = request.form["email"]
     senha = request.form["senha"]
-    if validar_login(email, senha):
+    usuario = validar_login(email, senha)
+    if usuario:
+        session["usuario_id"] = usuario["id_usuario"]
+        print(session["usuario_id"])
         return redirect("/")
     else:
-        return "email ou senha incorretos"
+        print("nao deu nao")
+        return redirect("/")
 
 @app.route("/cadastro_usuario", methods=["POST"])
 def cadastrar_usuario():
@@ -66,5 +90,15 @@ def cadastrar_usuario():
     else:
         print("usuario nao cadastrado")
         return redirect("/pagina_login")
+
+@app.route("/mostrar/item_carrinho")
+def mostrar_item_carrinho():
+    if "usuario_id" not in session:
+        return redirect("/login")
+
+    carrinho = buscar_carrinho(session["usuario_id"])
+    id_carrinho = carrinho["id_carrinho"]
+    item = buscar_itens_carrinho(id_carrinho)
+    return jsonify(item)
 
 app.run(debug=True)
