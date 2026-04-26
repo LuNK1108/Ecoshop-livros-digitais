@@ -1,7 +1,7 @@
-fetch("/mostra/livro")
+fetch("/mostrar/item_carrinho")
     .then(resposta => resposta.json())
     .then(livros => {
-        const lista = document.getElementById("lista-livros");
+        const lista = document.getElementById("item_carrinho");
 
         livros.forEach(livro => {
             lista.innerHTML += `
@@ -9,8 +9,7 @@ fetch("/mostra/livro")
                     <h2>${livro.titulo}</h2>
                     <p>${livro.descricao}</p>
                     <p>R$ ${livro.preco}</p>
-                    <button onclick="item_carrinho(${livro.id_livro})">Comprar</button>
-                    <button onclick="excluir(${livro.id_livro})">
+                    <button">
                     Excluir
                     </button>
                 </div>
