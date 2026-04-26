@@ -19,6 +19,15 @@ def mostrar_livros():
     cursor.close()
     return livros
 
+#busca carrinho pelo id_usuario
+def buscar_carrinho(id_usuario):
+    cursor = conexao.cursor(dictionary=True)
+    sql = ("SELECT id_carrinho FROM carrinho WHERE id_usuario = %s")
+    cursor.execute(sql, (id_usuario,))
+    id_carrinho = cursor.fetchone()
+    cursor.close()
+    return id_carrinho
+
 #insere um livro no banco
 def inserir_livro(id_autor, id_categoria, titulo, descricao, preco, arquivo, capa, paginas, ativo, data):
     cursor = conexao.cursor(dictionary=True)
@@ -50,10 +59,7 @@ def validar_login(email, senha):
     usuario = cursor.fetchone()
     cursor.close()
 
-    if usuario:
-        return True
-    else:
-        return False
+    return usuario
 
 #cadastra usuarios
 def cadastro_usuario(nome, email, senha, telefone, tipo, data):
@@ -72,3 +78,21 @@ def cadastro_usuario(nome, email, senha, telefone, tipo, data):
         return True
     else:
         return False
+
+def adicionar_item_carrinho(id_carrinho, id_livro, quantidade):
+    cursor = conexao.cursor()
+    sql = "INSERT INTO item_carrinho (id_carrinho, id_livro, quantidade) VALUES (%s, %s, %s)"
+    valores = (id_carrinho, id_livro, quantidade)
+    cursor.execute(sql, valores)
+    conexao.commit()
+    cursor.close()
+    
+def buscar_itens_carrinho(id_carrinho):
+    cursor = conexao.cursor(dictionary=True)
+
+    sql = """ SELECT l.* FROM item_carrinho ic JOIN livro l ON ic.id_livro = l.id_livro WHERE ic.id_carrinho = %s
+    """
+    cursor.execute(sql, (id_carrinho,))
+    itens = cursor.fetchall()
+    cursor.close()
+    return itens
